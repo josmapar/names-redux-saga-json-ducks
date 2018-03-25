@@ -1,0 +1,42 @@
+img#counter-logo { /*module name - id name (igual para class) */
+  width: 280px;
+  height: auto;
+}
+
+img#counter-loading {
+  width: 40px;
+}
+
+p#counter-number {
+  font-family: Roboto Condensed, sans-serif;
+  font-style: italic;
+  font-size: 2em;
+}
+
+div#counter-view {
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+
+@media (min-height: 400px) {
+  div#counter-redux-section {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+  }
+
+  div.counter-panel {
+    height: 96vh;
+  }
+}
+
+button.counter {
+  height: 70px;
+}
+
+div.counter-panel-heading {
+  font-size: 2em;
+}
+
+
