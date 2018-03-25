@@ -1,6 +1,6 @@
 {
-  "name": "inc-redux-saga-ducks",
-  "version": "0.1.1",
+  "name": "names-redux-saga-json-ducks",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "prop-types": "^15.6.1",
