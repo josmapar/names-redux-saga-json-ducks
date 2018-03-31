@@ -15,13 +15,13 @@ const CounterComponent = ({counter, isLoading, onHandleIncrement, onHandleDecrem
     
     <div>
       <div className="col-xs-5 text-right">
-        <button className="btn btn-lg btn-success counter" onClick={onHandleIncrement.bind(this)}>Increment</button>
+        <button className="btn btn-lg btn-success counter" onClick={onHandleIncrement}>Increment</button>
       </div>
 
       <div className="col-xs-2" />
 
       <div className="col-xs-5 text-left">
-        <button className="btn btn-lg btn-danger counter" onClick={onHandleDecrement.bind(this)}>Decrement</button>
+        <button className="btn btn-lg btn-danger counter" onClick={onHandleDecrement}>Decrement</button>
       </div>
     </div>
 

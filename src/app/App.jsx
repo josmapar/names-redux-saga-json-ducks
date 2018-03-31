@@ -1,10 +1,10 @@
 import React from 'react';
-import CounterContainer from './counter/CounterContainer';
+import NamesContainer from './names/NamesContainer';
 import { hot } from 'react-hot-loader';
 
 const App = () => (
   <div className="container-fluid text-center">
-    <CounterContainer />
+    <NamesContainer />
   </div>
 );
 
