@@ -5,6 +5,7 @@ import { counterIncrementAction, counterDecrementAction } from './duck/index';
 import CounterComponent from './CounterComponent';
 import InputComponent from './InputComponent';
 import SearchComponent from './SearchComponent';
+import TableComponent from './TableComponent';
 import { Panel } from 'react-bootstrap';
 import { compose, withHandlers } from 'recompose';
 //import './styles.css';
@@ -28,6 +29,7 @@ class CounterContainer extends Component {
           <InputComponent />
           <SearchComponent />
           <h2>Names List</h2>
+          <TableComponent items={[{name: 'John Smith', createdAt: '31/03/2018', updatedAt: '01/04/2018'}]} />
         </Panel.Body>
       </Panel>
     );
