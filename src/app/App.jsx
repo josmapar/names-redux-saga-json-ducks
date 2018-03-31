@@ -3,7 +3,7 @@ import NamesContainer from './names/NamesContainer';
 import { hot } from 'react-hot-loader';
 
 const App = () => (
-  <div className="container-fluid text-center">
+  <div className="container-fluid">
     <NamesContainer />
   </div>
 );

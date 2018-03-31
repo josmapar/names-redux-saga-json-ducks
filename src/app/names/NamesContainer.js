@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { counterIncrementAction, counterDecrementAction } from './duck/index';
 import CounterComponent from './CounterComponent';
+import InputComponent from './InputComponent';
+import SearchComponent from './SearchComponent';
+import { Panel } from 'react-bootstrap';
 import { compose, withHandlers } from 'recompose';
-import './styles.css';
+//import './styles.css';
 
 const enhance = compose(
   withHandlers({
@@ -17,17 +20,16 @@ class CounterContainer extends Component {
   render() {
     const { counter, isLoading, handleIncrement, handleDecrement } = this.props;
     return (
-      <div className="panel panel-primary counter-panel">
-        <div className="panel-heading counter-panel-heading">Counter Redux</div>
-        <div className="panel-body">
-          <CounterComponent  
-            counter={counter}
-            isLoading={isLoading}
-            onHandleIncrement={handleIncrement}
-            onHandleDecrement={handleDecrement}
-          />
-        </div>
-      </div>
+      <Panel bsStyle="primary">
+        <Panel.Heading>
+          <Panel.Title componentClass="h1">Names</Panel.Title>
+        </Panel.Heading>
+        <Panel.Body>
+          <InputComponent />
+          <SearchComponent />
+          <h2>Names List</h2>
+        </Panel.Body>
+      </Panel>
     );
   }
 }
