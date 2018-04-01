@@ -28,7 +28,8 @@ const enhance = compose(
 class NamesContainer extends Component {
   render() {
     const { names, isLoading, isLoadingUpdate
-      , createName, deleteName, editName } = this.props;
+      , createName, deleteName, editName
+      , getNames } = this.props;
     const nameCreate = {
       id: -1,
       name: 'Jose Perez',
@@ -47,6 +48,10 @@ class NamesContainer extends Component {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+    const query = {q: 'Jo'};
+    const sort_asc = {_sort: 'name', _order: 'asc'};
+    const sort_desc = {_sort: 'name', _order: 'desc'};
+    const q_sort_asc = {...query, ...sort_asc};
     return (
       <Panel bsStyle="primary">
         <Panel.Heading>
@@ -56,6 +61,10 @@ class NamesContainer extends Component {
           <Button onClick={() => createName(nameCreate)}>Create</Button>
           <Button onClick={() => deleteName(nameEdit)}>Delete</Button>
           <Button onClick={() => editName(nameEdit, nameEdit2)}>Edit</Button>
+          <Button onClick={() => getNames(query)}>Search</Button>
+          <Button onClick={() => getNames(sort_asc)}>Order ASC</Button>
+          <Button onClick={() => getNames(sort_desc)}>Order DESC</Button>
+          <Button onClick={() => getNames(q_sort_asc)}>Search {'&'} Order ASC</Button>
           <InputComponent />
           <SearchComponent />
           <h2>Names List</h2>
@@ -85,7 +94,7 @@ const mapStateToProps = ({ names }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getNames: () => dispatch(getNamesAction()),
+  getNames: (query) => dispatch(getNamesAction(query)),
   createName: (name) => dispatch(createNameAction(name)),
   deleteName: (id) => dispatch(deleteNameAction(id)),
   editName: (name, origName) => dispatch(editNameAction(name, origName))

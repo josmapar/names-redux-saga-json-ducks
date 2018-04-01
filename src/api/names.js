@@ -3,8 +3,10 @@ import { omit } from 'lodash';
 
 const ax = axios.create({});
 
-export async function getNames() {
-  const res = await ax('/names');
+export async function getNames(query) {
+  const res = await ax('/names', {
+    params: query
+  });
   // let a = new Promise(res => setTimeout(res, 3000));
   // await a;
   return res;

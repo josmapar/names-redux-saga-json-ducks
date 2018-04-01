@@ -27,11 +27,16 @@ const InitialState = {
   error: ''
 };
 
+function swapName(names, testfunc, name) {
+  const ind = findIndex(names, testfunc);
+  const st = [...names];
+  st.splice(ind, 1, name);
+  console.log(st);
+  return st;
+}
+
 //Reducer
 export default function reducer(state = InitialState, action = {}) {
-  let ind = -1;
-  let st = [];
-
   switch(action.type) {
     case GET_NAMES_REQ: return {...state, isLoading: true};
     case GET_NAMES_OK: return {...state, names: action.names, isLoading: false};
@@ -40,12 +45,10 @@ export default function reducer(state = InitialState, action = {}) {
     case CREATE_NAME_REQ: return {...state, 
                           names: [action.tempName, ...state.names], 
                           isLoadingUpdate: true};
-    case CREATE_NAME_OK:  ind = findIndex(state.names, (n) => n === action.tempName);
-                          st = [...state.names];
-                          st.splice(ind, 1, action.name);
-                          console.log(st);
-                          return {...state, 
-                          names: st,
+    case CREATE_NAME_OK:  return {...state, 
+                          names: swapName(state.names, 
+                            (n) => n === action.tempName, 
+                            action.name),
                           isLoadingUpdate: false};
     case CREATE_NAME_ERROR: return {...state, 
                           error: action.error, 
@@ -62,26 +65,20 @@ export default function reducer(state = InitialState, action = {}) {
                             names: [action.tempName, ...state.names],
                             isLoadingUpdate: false};
 
-    case EDIT_NAME_REQ: ind = findIndex(state.names, (n) => n.id === action.tempName.id);
-                        st = [...state.names];
-                        st.splice(ind, 1, action.name);
-                        console.log(st);
-                        return {...state, 
-                        names: st,
+    case EDIT_NAME_REQ: return {...state, 
+                        names: swapName(state.names,
+                          (n) => n.id === action.tempName.id,
+                          action.name),
                         isLoadingUpdate: true};
-    case EDIT_NAME_OK:  ind = findIndex(state.names, (n) => n.id === action.tempName.id);
-                        st = [...state.names];
-                        st.splice(ind, 1, action.name);
-                        console.log(st);
-                        return {...state, 
-                        names: st,
+    case EDIT_NAME_OK: return {...state, 
+                        names: swapName(state.names,
+                          (n) => n.id === action.tempName.id,
+                          action.name),
                         isLoadingUpdate: false};
-    case EDIT_NAME_ERROR: ind = findIndex(state.names, (n) => n.id === action.tempName.id);
-                          st = [...state.names];
-                          st.splice(ind, 1, action.tempName);
-                          console.log(st);
-                          return {...state, 
-                          names: st,
+    case EDIT_NAME_ERROR: return {...state, 
+                          names: swapName(state.names,
+                            (n) => n.id === action.tempName.id,
+                            action.name),
                           isLoadingUpdate: false};                        
     default: return state;
   }
@@ -89,10 +86,10 @@ export default function reducer(state = InitialState, action = {}) {
 
 //Action Creators
 
-export function getNamesAction() {
+export function getNamesAction(query) {
   return {
     type: GET_NAMES_REQ,
-    payload: null
+    query
   };
 }
 
@@ -120,9 +117,9 @@ export function editNameAction(name, tempName) {
 
 //Sagas
 
-function* getNamesSaga() {
+function* getNamesSaga({query}) {
   try {
-    const res = yield call(getNames);
+    const res = yield call(getNames, query);
     
     console.log("names:", res);
     yield put({type: GET_NAMES_OK, names: res.data});
@@ -159,7 +156,7 @@ function* deleteNameSaga({tempName}) {
 
 function* editNameSaga({name, tempName}) {
   try{
-    yield call(() => new Promise(res => setTimeout(res, 5000)));
+    //yield call(() => new Promise(res => setTimeout(res, 5000)));
     const res = yield call(editName, name);
     yield put({type: EDIT_NAME_OK, name: res.data, tempName});
   } catch(error) {
