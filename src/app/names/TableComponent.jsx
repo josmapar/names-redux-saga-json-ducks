@@ -1,8 +1,10 @@
 import React from 'react';
 import { Table, Button, Glyphicon, Pagination } from 'react-bootstrap';
-import { flattenProp } from 'recompose';
+import { flattenProp, branch, renderComponent } from 'recompose';
+import LoadingComponent from './LoadingComponent';
 
-const ItemComponent = flattenProp('value')(({ name, createdAt, updatedAt }) => (
+const ItemComponent = flattenProp('value')(
+  ({ name, createdAt, updatedAt }) => (
   <tr>
     <td>{name}</td>
     <td>{createdAt}</td>
@@ -15,7 +17,9 @@ const ItemComponent = flattenProp('value')(({ name, createdAt, updatedAt }) => (
   </tr>
 ));
 
-const TableComponent = ( { items } ) => (
+const enhance = branch(({ isLoading }) => isLoading,
+  renderComponent(LoadingComponent)); 
+const TableComponent = enhance(( { items } ) => (
   <div>
     <Table responsive>
       <thead>
@@ -44,6 +48,6 @@ const TableComponent = ( { items } ) => (
       <Pagination.Next>Next {'->'}</Pagination.Next>
     </Pagination>      
   </div>
-);
+));
 
 export default TableComponent;

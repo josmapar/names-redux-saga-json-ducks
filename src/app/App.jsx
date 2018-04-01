@@ -1,11 +1,12 @@
 import React from 'react';
 import NamesContainer from './names/NamesContainer';
 import { hot } from 'react-hot-loader';
+import { Grid } from 'react-bootstrap';
 
 const App = () => (
-  <div className="container-fluid">
+  <Grid fluid>
     <NamesContainer />
-  </div>
+  </Grid>
 );
 
 export default hot(module)(App);

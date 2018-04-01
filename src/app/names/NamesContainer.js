@@ -1,25 +1,32 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { counterIncrementAction, counterDecrementAction } from './duck/index';
+import { getNamesAction } from './duck/index';
 import CounterComponent from './CounterComponent';
 import InputComponent from './InputComponent';
 import SearchComponent from './SearchComponent';
 import TableComponent from './TableComponent';
+import LoadingComponent from './LoadingComponent';
 import { Panel } from 'react-bootstrap';
-import { compose, withHandlers } from 'recompose';
+import { compose, withHandlers, lifecycle
+   } from 'recompose';
 //import './styles.css';
 
 const enhance = compose(
   withHandlers({
-    handleIncrement: ({counterIncrement}) => () => (counterIncrement()),
-    handleDecrement: ({counterDecrement}) => () => (counterDecrement())
+    //handleIncrement: ({counterIncrement}) => () => (counterIncrement()),
+  }),
+  lifecycle({
+    componentDidMount() {
+      const { getNames } = this.props;
+      getNames();
+    }
   })
 );
 
-class CounterContainer extends Component {
+class NamesContainer extends Component {
   render() {
-    const { counter, isLoading, handleIncrement, handleDecrement } = this.props;
+    const { names, isLoading } = this.props;
     return (
       <Panel bsStyle="primary">
         <Panel.Heading>
@@ -29,28 +36,28 @@ class CounterContainer extends Component {
           <InputComponent />
           <SearchComponent />
           <h2>Names List</h2>
-          <TableComponent items={[{name: 'John Smith', createdAt: '31/03/2018', updatedAt: '01/04/2018'}]} />
+          <TableComponent isLoading={isLoading} 
+                          items={names} />
         </Panel.Body>
       </Panel>
     );
   }
 }
 
-CounterContainer.propTypes = {
-  counter: PropTypes.number,
+NamesContainer.propTypes = {
+  names: PropTypes.array,
   isLoading: PropTypes.bool,
-  counterIncrement: PropTypes.func.isRequired,
-  counterDecrement: PropTypes.func.isRequired
+  getNames: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ counter }) => ({
-   counter: counter.counter, //modulo.estado
-   isLoading: counter.isLoading
+const mapStateToProps = ({ names }) => ({
+   names: names.names, //modulo.estado
+   isLoading: names.isLoading
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  counterIncrement: () => dispatch(counterIncrementAction()),
-  counterDecrement: () => dispatch(counterDecrementAction())
-})
+  getNames: () => dispatch(getNamesAction())
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(enhance(CounterContainer));
+export default connect(mapStateToProps, 
+  mapDispatchToProps)(enhance(NamesContainer));
