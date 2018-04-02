@@ -19,12 +19,25 @@ const EDIT_NAME_ERROR = 'app/names/EDIT_NAME_ERROR';
 const EDIT_NAME_REQ = 'app/names/EDIT_NAME_REQ';
 const EDIT_NAME_OK = 'app/names/EDIT_NAME_OK';
 
+const SET_NAME_SEARCH = 'app/names/SET_NAME_SEARCH';
+const SET_NAME_TEXT = 'app/names/SET_NAME_TEXT';
+const SET_NAME_ENTITY = 'app/names/SET_NAME_ENTITY';
+
 //Initial State
 const InitialState = {
   names: [],
   isLoading: false,
   isLoadingUpdate: false,
-  error: ''
+  error: '',
+  search: '',
+  nameText: '',
+  name: {
+    id: -1,
+    name: '',
+    createdAt: '',
+    updatedAt: ''
+  },
+  modeForm: 'Create'
 };
 
 function swapName(names, testfunc, name) {
@@ -79,7 +92,15 @@ export default function reducer(state = InitialState, action = {}) {
                           names: swapName(state.names,
                             (n) => n.id === action.tempName.id,
                             action.name),
-                          isLoadingUpdate: false};                        
+                          isLoadingUpdate: false};
+    case SET_NAME_SEARCH: return {
+                            ...state,
+                            search: action.search
+                          };
+    case SET_NAME_TEXT: return {
+                          ...state,
+                          nameText: action.nameText
+                        };                        
     default: return state;
   }
 }
@@ -112,6 +133,20 @@ export function editNameAction(name, tempName) {
     type: EDIT_NAME_REQ,
     tempName,
     name
+  };
+}
+
+export function setNameSearchAction(search) {
+  return {
+    type: SET_NAME_SEARCH,
+    search
+  };
+}
+
+export function setNameTextAction(nameText) {
+  return {
+    type: SET_NAME_TEXT,
+    nameText
   };
 }
 
