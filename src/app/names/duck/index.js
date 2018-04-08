@@ -22,6 +22,19 @@ const EDIT_NAME_OK = 'app/names/EDIT_NAME_OK';
 const SET_NAME_SEARCH = 'app/names/SET_NAME_SEARCH';
 const SET_NAME_TEXT = 'app/names/SET_NAME_TEXT';
 const SET_NAME_ENTITY = 'app/names/SET_NAME_ENTITY';
+const SET_NAME_MODE_FORM = 'app/names/SET_NAME_MODE_FORM';
+const SET_NAME_ORDER = 'app/names/SET_NAME_ORDER';
+
+// function createName() {
+//   return {
+//     id: -1,
+//     name: '',
+//     createdAt: '',
+//     updatedAt: ''
+//   };
+// }
+
+//order {field, type}
 
 //Initial State
 const InitialState = {
@@ -30,14 +43,16 @@ const InitialState = {
   isLoadingUpdate: false,
   error: '',
   search: '',
+  actSearch: '',
   nameText: '',
-  name: {
-    id: -1,
-    name: '',
-    createdAt: '',
-    updatedAt: ''
-  },
-  modeForm: 'Create'
+  _nameText: '',
+  name: null,
+  modeForm: 'Create',
+  totalPags: 1,
+  actPag: 1,
+  _actPag: 1,
+  order: null, 
+  _order: null
 };
 
 function swapName(names, testfunc, name) {
@@ -48,24 +63,56 @@ function swapName(names, testfunc, name) {
   return st;
 }
 
+function calOrder(query, opts = {nameField: 'field', nameType: 'type'}) {
+  //const qp = {q: query.q, _page: query._page};
+  const { nameField, nameType } = opts;
+  let res = null;
+  if(typeof(query.order) !== 'undefined') {
+    res = {
+      [nameField]: query.order.field,
+      [nameType]: query.order.type
+    };
+  } else if(typeof(query.oldOrder) !== 'undefined' 
+          && typeof(query.field) !== 'undefined') {
+    if(query.oldOrder === null 
+      || query.oldOrder.field !== query.field) {
+      res = {
+        [nameField]: query.field,
+        [nameType]: 'asc'
+      };
+    } else {
+      res = {
+        [nameField]: query.field,
+        [nameType]: query.oldOrder.type==='asc'?'desc':'asc'
+      };
+    }
+  }
+  return res;
+}
+
 //Reducer
 export default function reducer(state = InitialState, action = {}) {
   switch(action.type) {
-    case GET_NAMES_REQ: return {...state, isLoading: true};
-    case GET_NAMES_OK: return {...state, names: action.names, isLoading: false};
-    case GET_NAMES_ERROR: return {...state, error: action.error, isLoading: false};
+    case GET_NAMES_REQ: return {...state, isLoading: true, _actPag: state.actPag, actPag: action.query._page, _order: state.order, order: calOrder(action.query)};
+    case GET_NAMES_OK: return {...state, names: action.names, totalPags: action.totalPags, actPag: action.actPag, actSearch: action.actSearch, _order: null, isLoading: false};
+    case GET_NAMES_ERROR: return {...state, error: action.error, actPag: state._actPag, order: state._order, isLoading: false};
 
     case CREATE_NAME_REQ: return {...state, 
                           names: [action.tempName, ...state.names], 
+                          _nameText: state.nameText,
+                          nameText: '',
                           isLoadingUpdate: true};
     case CREATE_NAME_OK:  return {...state, 
                           names: swapName(state.names, 
                             (n) => n === action.tempName, 
                             action.name),
+                          _nameText: '',
                           isLoadingUpdate: false};
     case CREATE_NAME_ERROR: return {...state, 
                           error: action.error, 
                           names: reject(state.names, (n) => n === action.tempName),
+                          nameText: state._nameText,
+                          _nameText: '',
                           isLoadingUpdate: false};
 
     case DELETE_NAME_REQ: return {...state, 
@@ -82,16 +129,24 @@ export default function reducer(state = InitialState, action = {}) {
                         names: swapName(state.names,
                           (n) => n.id === action.tempName.id,
                           action.name),
+                        modeForm: 'Create',
+                        _nameText: state.nameText,
+                        nameText: '',
                         isLoadingUpdate: true};
     case EDIT_NAME_OK: return {...state, 
                         names: swapName(state.names,
                           (n) => n.id === action.tempName.id,
                           action.name),
+                        name: null,
+                        _nameText: '',
                         isLoadingUpdate: false};
     case EDIT_NAME_ERROR: return {...state, 
                           names: swapName(state.names,
                             (n) => n.id === action.tempName.id,
                             action.name),
+                          nameText: state._nameText,
+                          _nameText: '',
+                          modeForm: 'Edit',
                           isLoadingUpdate: false};
     case SET_NAME_SEARCH: return {
                             ...state,
@@ -100,7 +155,39 @@ export default function reducer(state = InitialState, action = {}) {
     case SET_NAME_TEXT: return {
                           ...state,
                           nameText: action.nameText
-                        };                        
+                        };
+    case SET_NAME_MODE_FORM: 
+                        const { modeForm } = action;                    
+                        let name;
+                        let nameText;
+                        
+                        switch(modeForm) {
+                          case 'Create':
+                            name = null;
+                            nameText = '';
+                            break;
+                          case 'Edit':
+                            name = action.name;
+                            nameText = action.name.name;
+                            break;
+                        }
+
+                        return {
+                          ...state,
+                          modeForm,
+                          name,
+                          nameText
+                        };
+    case SET_NAME_ORDER: 
+                      let order;
+                      if(state.order === null)
+                        order = {field: action.field, type: 'asc'};
+                      else 
+                        order = {field: action.field, type: state.order.type==='asc'?'desc':'asc'};
+                      return {
+                        ...state,
+                        order
+                      };
     default: return state;
   }
 }
@@ -129,6 +216,7 @@ export function deleteNameAction(name) {
 }
 
 export function editNameAction(name, tempName) {
+  console.log(tempName);
   return {
     type: EDIT_NAME_REQ,
     tempName,
@@ -150,15 +238,38 @@ export function setNameTextAction(nameText) {
   };
 }
 
+export function setNameModeFormAction(modeForm, name = null) {
+  return {
+    type: SET_NAME_MODE_FORM,
+    modeForm,
+    name
+  };
+}
+
+export function setNameOrderAction(field) {
+  return {
+    type: SET_NAME_ORDER,
+    field
+  };
+}
+
 //Sagas
 
 function* getNamesSaga({query}) {
   try {
-    const res = yield call(getNames, query);
-    
-    console.log("names:", res);
-    yield put({type: GET_NAMES_OK, names: res.data});
+    const res = yield call(getNames, {
+      q: query.q, 
+      _page: query._page, 
+      ...calOrder(query, {nameField: '_sort', nameType: '_order'})
+    });
 
+    console.log("names:", res);
+    const totalItems = parseInt(res.headers['x-total-count'], 10);
+    const limit = 10; //default
+    const totalPags = parseInt(Math.ceil(totalItems/limit), 10);
+
+    yield put({type: GET_NAMES_OK, names: res.data, totalPags
+      , actPag: query._page, actSearch: query.q});
   } catch (error) {
     console.log(error);
     yield put({type: GET_NAMES_ERROR, error: error.message});

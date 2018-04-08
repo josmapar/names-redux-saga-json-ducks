@@ -1,19 +1,33 @@
 import React from 'react';
-import { Table, Button, Glyphicon, Pagination } from 'react-bootstrap';
+import { Table, Button, Glyphicon
+  , Pagination } from 'react-bootstrap';
 import { flattenProp, branch, renderComponent
   , compose, pure } from 'recompose';
 import LoadingComponent from './LoadingComponent';
+import PaginationComponent from './PaginationComponent';
+
+const colHeader = (col, field, order) => {
+  if(order !== null && order.field === field) {
+    if(order.type === 'asc') 
+      return `${col} ▲`;
+    else 
+      return `${col} ▼`;
+  } else {
+    return col;
+  }
+};
 
 const ItemComponent = flattenProp('value')(
-  ({ name, createdAt, updatedAt }) => (
+  ({ name, createdAt, updatedAt
+    , value, onEdit, onDelete }) => (
   <tr>
     <td>{name}</td>
     <td>{createdAt}</td>
     <td>{updatedAt}</td>
     <td>
-      <a><Glyphicon glyph="edit" /></a>
+      <a onClick={() => onEdit(value)}><Glyphicon glyph="edit" /></a>
       {' '}
-      <a><Glyphicon glyph="trash" /></a>
+      <a onClick={() => onDelete(value)}><Glyphicon glyph="trash" /></a>
     </td>
   </tr>
 ));
@@ -23,34 +37,38 @@ const enhance = compose(
     renderComponent(LoadingComponent)),
   pure
 ); 
-const TableComponent = ( { items } ) => (
+const TableComponent = ( { items, onEdit, onDelete
+, actPag, totalPags, onChangePag
+, onPrev, onNext, order
+, onChangeOrd } ) => (
   <div>
     <Table responsive>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Created At</th>
-          <th>Updated At</th>
+          <th style={{cursor: 'pointer'}} 
+            onClick={() => onChangeOrd('name')}>
+            {colHeader('Name', 'name', order)}
+          </th>
+          <th style={{cursor: 'pointer'}}
+            onClick={() => onChangeOrd('createdAt')}>
+            {colHeader('Created At', 'createdAt', order)}
+          </th>
+          <th style={{cursor: 'pointer'}}
+            onClick={() => onChangeOrd('updatedAt')}>
+            {colHeader('Updated At', 'updatedAt', order)}
+          </th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {items.map((value, index) => (
-          <ItemComponent key={index} value={value} />
+          <ItemComponent key={index} value={value} 
+            onEdit={onEdit} onDelete={onDelete} />
         ))}         
       </tbody>
     </Table>
-    <Pagination>
-      <Pagination.Prev>{'<-'} Previous</Pagination.Prev>
-      <Pagination.Item active>{1}</Pagination.Item>
-      <Pagination.Item>{2}</Pagination.Item>
-      <Pagination.Item>{3}</Pagination.Item>
-      <Pagination.Item>{4}</Pagination.Item>
-      <Pagination.Ellipsis />
-      
-      <Pagination.Item>{10}</Pagination.Item>
-      <Pagination.Next>Next {'->'}</Pagination.Next>
-    </Pagination>      
+    <PaginationComponent actPag={actPag} totalPags={totalPags}
+      onChangePag={onChangePag} onPrev={onPrev} onNext={onNext} />
   </div>
 );
 

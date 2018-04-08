@@ -3,7 +3,7 @@ const faker = require('faker');
 module.exports = () => {
   let names = [];
 
-  for(let i=0; i<20; i++) {
+  for(let i=0; i<100; i++) {
     let name = `${faker.name.firstName()} ${faker.name.lastName()}`;
     let date = faker.date.recent(5);
     let createdAt = date;
