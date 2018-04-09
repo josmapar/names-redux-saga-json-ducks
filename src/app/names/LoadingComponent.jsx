@@ -1,6 +1,7 @@
 import React from 'react';
 import loadingImage from '../blue-loading.gif';
 import { compose, defaultProps } from 'recompose';
+import PropTypes from 'prop-types';
 
 const enhance = compose(
   defaultProps({
@@ -16,4 +17,8 @@ const LoadingComponent = ({ className, styleImg }) => (
         src={loadingImage} />
   </div>
 );
+LoadingComponent.propTypes = {
+  className: PropTypes.string,
+  styleImg: PropTypes.object
+};
 export default enhance(LoadingComponent);

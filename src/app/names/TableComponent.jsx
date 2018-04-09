@@ -1,10 +1,11 @@
 import React from 'react';
-import { Table, Button, Glyphicon
-  , Pagination } from 'react-bootstrap';
-import { flattenProp, branch, renderComponent
+import { Table } from 'react-bootstrap';
+import { branch, renderComponent
   , compose, pure } from 'recompose';
+import PropTypes from 'prop-types';
 import LoadingComponent from './LoadingComponent';
 import PaginationComponent from './PaginationComponent';
+import ItemComponent from './ItemComponent';
 
 const colHeader = (col, field, order) => {
   if(order !== null && order.field === field) {
@@ -16,32 +17,6 @@ const colHeader = (col, field, order) => {
     return col;
   }
 };
-
-const ItemComponent = flattenProp('value')(
-  ({ name, createdAt, updatedAt
-    , value, onEdit, onDelete
-    , isLoadingUpdate, modeForm }) => (
-  <tr>
-    <td>{name}</td>
-    <td>{createdAt}</td>
-    <td>{updatedAt}</td>
-    <td>
-      <div>
-        {!isLoadingUpdate ?
-          <div>
-            <a style={{cursor: 'pointer'}} onClick={() => onEdit(value)}><Glyphicon glyph="edit" /></a>
-            {' '}
-            {modeForm !== 'Edit' &&
-              <a style={{cursor: 'pointer'}} onClick={() => onDelete(value)}><Glyphicon glyph="trash" /></a>
-            }
-          </div>
-        :
-          <LoadingComponent className='' styleImg={{width: '25px'}} />
-        }
-      </div>
-    </td>
-  </tr>
-));
 
 const enhance = compose(
   branch(({ isLoading }) => isLoading,
@@ -84,5 +59,19 @@ const TableComponent = ( { items, onEdit, onDelete
       onChangePag={onChangePag} onPrev={onPrev} onNext={onNext} />
   </div>
 );
-
+TableComponent.propTypes = {
+  items: PropTypes.array.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  actPag: PropTypes.number.isRequired,
+  totalPags: PropTypes.number.isRequired,
+  onChangePag: PropTypes.func.isRequired,
+  onPrev: PropTypes.func.isRequired,
+  onNext: PropTypes.func.isRequired,
+  order: PropTypes.object,
+  onChangeOrd: PropTypes.func.isRequired,
+  isLoadingUpdate: PropTypes.bool.isRequired,
+  modeForm: PropTypes.oneOf(['Create', 'Edit']).isRequired,
+  isLoading: PropTypes.bool.isRequired
+};
 export default enhance(TableComponent);

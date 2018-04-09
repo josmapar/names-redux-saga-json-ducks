@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pagination } from 'react-bootstrap';
-import { compose, defaultProps, withHandlers } from 'recompose';
+import { compose, defaultProps } from 'recompose';
 import PropTypes from 'prop-types';
 import './paginationStyles.css';
 
@@ -62,6 +62,9 @@ const PaginationComponent = ({ actPag, totalPags, numberMaxNeighbors
 PaginationComponent.propTypes = {
   actPag: PropTypes.number.isRequired,
   totalPags: PropTypes.number.isRequired,
-  numberMaxNeighbors: PropTypes.number
+  numberMaxNeighbors: PropTypes.number,
+  onChangePag: PropTypes.func.isRequired,
+  onPrev: PropTypes.func.isRequired,
+  onNext: PropTypes.func.isRequired
 };
 export default enhance(PaginationComponent);

@@ -1,6 +1,6 @@
 import { put, call, takeLatest, takeEvery } from 'redux-saga/effects';
 import { getNames, createName, deleteName, editName } from '../../../api/names';
-import { reject, findIndex, find } from 'lodash';
+import { reject, findIndex } from 'lodash';
 
 //Actions
 const GET_NAMES_ERROR = 'app/names/GET_NAMES_ERROR';
@@ -21,22 +21,18 @@ const EDIT_NAME_OK = 'app/names/EDIT_NAME_OK';
 
 const SET_NAME_SEARCH = 'app/names/SET_NAME_SEARCH';
 const SET_NAME_TEXT = 'app/names/SET_NAME_TEXT';
-const SET_NAME_ENTITY = 'app/names/SET_NAME_ENTITY';
 const SET_NAME_MODE_FORM = 'app/names/SET_NAME_MODE_FORM';
 const SET_NAME_ORDER = 'app/names/SET_NAME_ORDER';
 const SHOW_NAME_DELETE_CONF = 'app/names/SHOW_NAME_DELETE_CONF';
 const CANCEL_NAME_DELETE_CONF = 'app/names/CANCEL_NAME_DELETE_CONF';
 const OK_NAME_ERROR = 'app/names/OK_NAME_ERROR';
 
-// function createName() {
-//   return {
-//     id: -1,
-//     name: '',
-//     createdAt: '',
-//     updatedAt: ''
-//   };
-// }
-
+// name {
+//   id: -1,
+//   name: '',
+//   createdAt: '',
+//   updatedAt: ''
+// };
 //order {field, type}
 
 //Initial State
@@ -50,7 +46,7 @@ const InitialState = {
   nameText: '',
   _nameText: '',
   name: null,
-  modeForm: 'Create', //Create,Edit,Delete
+  modeForm: 'Create', //Create,Edit
   totalPags: 1,
   actPag: 1,
   _actPag: 1,
@@ -63,15 +59,14 @@ function swapName(names, testfunc, name) {
   const ind = findIndex(names, testfunc);
   const st = [...names];
   st.splice(ind, 1, name);
-  console.log(st);
+  //console.log(st);
   return st;
 }
 
 function calOrder(query, opts = {nameField: 'field', nameType: 'type'}) {
-  //const qp = {q: query.q, _page: query._page};
   const { nameField, nameType } = opts;
   let res = null;
-  if(typeof(query.order) !== 'undefined') {
+  if(typeof(query.order) !== 'undefined' && query.order !== null) {
     res = {
       [nameField]: query.order.field,
       [nameType]: query.order.type
@@ -176,6 +171,8 @@ export default function reducer(state = InitialState, action = {}) {
                           case 'Edit':
                             name = action.name;
                             nameText = action.name.name;
+                            break;
+                          default: 
                             break;
                         }
 
@@ -305,27 +302,25 @@ function* getNamesSaga({query}) {
       ...calOrder(query, {nameField: '_sort', nameType: '_order'})
     });
 
-    console.log("names:", res);
+    //console.log("names:", res);
     const totalItems = parseInt(res.headers['x-total-count'], 10);
     const limit = 10; //default
     const totalPags = parseInt(Math.ceil(totalItems/limit), 10);
 
     yield put({type: GET_NAMES_OK, names: res.data, totalPags
-      , actPag: query._page, actSearch: query.q});
+      , actPag: query._page, actSearch: query.q || ''});
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     yield put({type: GET_NAMES_ERROR, error: error.message});
   }
 }
 
 function* createNameSaga({tempName}) {
   try{
-    // yield call(() => new Promise(res => setTimeout(res, 3000)));
-    // throw new Error("error random");
     const res = yield call(createName, tempName);
     yield put({type: CREATE_NAME_OK, name: res.data, tempName});
   } catch(error) {
-    console.log(error);
+    //console.log(error);
     yield put({type: CREATE_NAME_ERROR, error: error.message
       ,tempName });
   }
@@ -333,10 +328,10 @@ function* createNameSaga({tempName}) {
 
 function* deleteNameSaga({tempName}) {
   try{
-    const res = yield call(deleteName, tempName);
+    yield call(deleteName, tempName);
     yield put({type: DELETE_NAME_OK});
   } catch(error) {
-    console.log(error);
+    //console.log(error);
     yield put({type: DELETE_NAME_ERROR, error: error.message
       ,tempName});
   }
@@ -344,11 +339,10 @@ function* deleteNameSaga({tempName}) {
 
 function* editNameSaga({name, tempName}) {
   try{
-    //yield call(() => new Promise(res => setTimeout(res, 5000)));
     const res = yield call(editName, name);
     yield put({type: EDIT_NAME_OK, name: res.data, tempName});
   } catch(error) {
-    console.log(error);
+    //console.log(error);
     yield put({type: EDIT_NAME_ERROR, error: error.message
       ,tempName });
   }

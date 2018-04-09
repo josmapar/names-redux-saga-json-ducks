@@ -6,11 +6,9 @@ import { getNamesAction, createNameAction, deleteNameAction
       , setNameModeFormAction, setNameOrderAction
       , showNameDeleteConfAction, cancelNameDeleteConfAction
       , okNameErrorAction } from './duck/index';
-import CounterComponent from './CounterComponent';
 import InputComponent from './InputComponent';
 import SearchComponent from './SearchComponent';
 import TableComponent from './TableComponent';
-import LoadingComponent from './LoadingComponent';
 import { Panel, Button, Modal
   , Glyphicon } from 'react-bootstrap';
 import { compose, withHandlers, lifecycle
@@ -19,10 +17,7 @@ import { compose, withHandlers, lifecycle
 
 const enhance = compose(
   withHandlers({
-    //handleIncrement: ({counterIncrement}) => () => (counterIncrement()),
     handleSubmitSearch: ({ getNames, search }) => (e) => {
-      //setSearch(value);
-      //getNames({q: value});
       e.preventDefault();
       getNames({q: search, _page: 1});
     },
@@ -32,7 +27,7 @@ const enhance = compose(
     handleSubmitForm: ({createName, editName, nameText
       , modeForm, name}) => (e) => {
       e.preventDefault();
-      console.log("handleSubmitForm ...");
+      //console.log("handleSubmitForm ...");
       if(modeForm === 'Create') {
         const obj = {
           name: nameText,
@@ -47,7 +42,7 @@ const enhance = compose(
           name: nameText,
           updatedAt: new Date().toISOString()
         };
-        //console.log(obj);
+        
         editName(obj, name);
       }
     },
@@ -82,7 +77,6 @@ const enhance = compose(
         getNames({q: actSearch, _page: actPag + 1, order});
     },
     handleChangeOrd: ({ setOrder, getNames, order, actSearch, actPag }) => (field) => {
-      //setOrder(field);
       getNames({q: actSearch, _page: actPag, oldOrder: order, field});
     },
     handleOkError: ({ okNameError }) => () => {
@@ -102,7 +96,7 @@ class NamesContainer extends Component {
     const { names, isLoading, isLoadingUpdate
       , createName, deleteName, editName
       , getNames, handleSubmitSearch, search 
-      , handleChangeSearch, setName, handleSubmitForm
+      , handleChangeSearch, handleSubmitForm
       , handleChangeForm, nameText, modeForm 
       , handleEdit, handleDelete, totalPags
       , actPag, handleChangePag, handlePrevPag
@@ -204,22 +198,50 @@ class NamesContainer extends Component {
 }
 
 NamesContainer.propTypes = {
-  names: PropTypes.array,
-  isLoading: PropTypes.bool,
-  isLoadingUpdate: PropTypes.bool,
-  getNames: PropTypes.func.isRequired,
-  createName: PropTypes.func.isRequired,
-  deleteName: PropTypes.func.isRequired,
+  names: PropTypes.array.isRequired, 
+  isLoading: PropTypes.bool.isRequired, 
+  isLoadingUpdate: PropTypes.bool.isRequired,
+  createName: PropTypes.func.isRequired, 
+  deleteName: PropTypes.func.isRequired, 
   editName: PropTypes.func.isRequired,
+  getNames: PropTypes.func.isRequired, 
+  handleSubmitSearch: PropTypes.func.isRequired, 
+  search: PropTypes.string.isRequired, 
+  handleChangeSearch: PropTypes.func.isRequired, 
+  setNameText: PropTypes.func.isRequired, 
+  handleSubmitForm: PropTypes.func.isRequired,
+  handleChangeForm: PropTypes.func.isRequired, 
+  nameText: PropTypes.string.isRequired, 
+  modeForm: PropTypes.oneOf(['Create', 'Edit']).isRequired, 
+  handleEdit: PropTypes.func.isRequired, 
+  handleDelete: PropTypes.func.isRequired, 
+  totalPags: PropTypes.number.isRequired,
+  actPag: PropTypes.number.isRequired, 
+  handleChangePag: PropTypes.func.isRequired, 
+  handlePrevPag: PropTypes.func.isRequired,
+  handleNextPag: PropTypes.func.isRequired, 
+  order: PropTypes.object, 
+  handleChangeOrd: PropTypes.func.isRequired, 
+  handleCancelEdit: PropTypes.func.isRequired, 
+  showConfDel: PropTypes.bool.isRequired,
+  handleDeleteConfCancel: PropTypes.func.isRequired, 
+  handleShowDeleteConf: PropTypes.func.isRequired, 
+  name: PropTypes.object,
+  handleOkError: PropTypes.func.isRequired, 
+  error: PropTypes.string.isRequired,
+
+  actSearch: PropTypes.string.isRequired,
+
   setSearch: PropTypes.func.isRequired,
-  search: PropTypes.string,
-  setNameText: PropTypes.func.isRequired,
-  nameText: PropTypes.string,
-  modeForm: PropTypes.string
+  setModeForm: PropTypes.func.isRequired,
+  setOrder: PropTypes.func.isRequired,
+  showDeleteConf: PropTypes.func.isRequired,
+  cancelDeleteConf: PropTypes.func.isRequired,
+  okNameError: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ names }) => ({
-   names: names.names, //modulo.estado
+   names: names.names, //module.state
    isLoading: names.isLoading,
    isLoadingUpdate: names.isLoadingUpdate,
    error: names.error,
