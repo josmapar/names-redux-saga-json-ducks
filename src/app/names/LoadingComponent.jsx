@@ -1,9 +1,19 @@
 import React from 'react';
 import loadingImage from '../blue-loading.gif';
+import { compose, defaultProps } from 'recompose';
 
-export default (props) => (
-  <div className="text-center">
-    <img alt="loading..." style={{width: '5%'}}  
+const enhance = compose(
+  defaultProps({
+    className: 'text-center',
+    styleImg: {
+      width: '5%'
+    }
+  })
+);
+const LoadingComponent = ({ className, styleImg }) => (
+  <div className={className}>
+    <img alt="loading..." style={styleImg}  
         src={loadingImage} />
   </div>
 );
+export default enhance(LoadingComponent);

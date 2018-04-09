@@ -19,15 +19,26 @@ const colHeader = (col, field, order) => {
 
 const ItemComponent = flattenProp('value')(
   ({ name, createdAt, updatedAt
-    , value, onEdit, onDelete }) => (
+    , value, onEdit, onDelete
+    , isLoadingUpdate, modeForm }) => (
   <tr>
     <td>{name}</td>
     <td>{createdAt}</td>
     <td>{updatedAt}</td>
     <td>
-      <a onClick={() => onEdit(value)}><Glyphicon glyph="edit" /></a>
-      {' '}
-      <a onClick={() => onDelete(value)}><Glyphicon glyph="trash" /></a>
+      <div>
+        {!isLoadingUpdate ?
+          <div>
+            <a style={{cursor: 'pointer'}} onClick={() => onEdit(value)}><Glyphicon glyph="edit" /></a>
+            {' '}
+            {modeForm !== 'Edit' &&
+              <a style={{cursor: 'pointer'}} onClick={() => onDelete(value)}><Glyphicon glyph="trash" /></a>
+            }
+          </div>
+        :
+          <LoadingComponent className='' styleImg={{width: '25px'}} />
+        }
+      </div>
     </td>
   </tr>
 ));
@@ -40,7 +51,7 @@ const enhance = compose(
 const TableComponent = ( { items, onEdit, onDelete
 , actPag, totalPags, onChangePag
 , onPrev, onNext, order
-, onChangeOrd } ) => (
+, onChangeOrd, isLoadingUpdate, modeForm } ) => (
   <div>
     <Table responsive>
       <thead>
@@ -63,7 +74,9 @@ const TableComponent = ( { items, onEdit, onDelete
       <tbody>
         {items.map((value, index) => (
           <ItemComponent key={index} value={value} 
-            onEdit={onEdit} onDelete={onDelete} />
+            onEdit={onEdit} onDelete={onDelete}
+            isLoadingUpdate={isLoadingUpdate} 
+            modeForm={modeForm} />
         ))}         
       </tbody>
     </Table>

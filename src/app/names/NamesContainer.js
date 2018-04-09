@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getNamesAction, createNameAction, deleteNameAction
       , editNameAction, setNameSearchAction, setNameTextAction
-      , setNameModeFormAction, setNameOrderAction } from './duck/index';
+      , setNameModeFormAction, setNameOrderAction
+      , showNameDeleteConfAction, cancelNameDeleteConfAction } from './duck/index';
 import CounterComponent from './CounterComponent';
 import InputComponent from './InputComponent';
 import SearchComponent from './SearchComponent';
 import TableComponent from './TableComponent';
 import LoadingComponent from './LoadingComponent';
-import { Panel, Button } from 'react-bootstrap';
+import { Panel, Button, Modal } from 'react-bootstrap';
 import { compose, withHandlers, lifecycle
    } from 'recompose';
 //import './styles.css';
@@ -58,6 +59,12 @@ const enhance = compose(
     handleCancelEdit: ({ setModeForm }) => () => {
       setModeForm('Create');
     },
+    handleShowDeleteConf: ({ showDeleteConf }) => (value) => {
+      showDeleteConf(value);
+    },
+    handleDeleteConfCancel: ({ cancelDeleteConf }) => () => {
+      cancelDeleteConf();
+    },
     handleDelete: ({ deleteName }) => (value) => {
       deleteName(value);
     },
@@ -95,7 +102,9 @@ class NamesContainer extends Component {
       , handleEdit, handleDelete, totalPags
       , actPag, handleChangePag, handlePrevPag
       , handleNextPag, order, handleChangeOrd 
-      , handleCancelEdit} = this.props;
+      , handleCancelEdit, showConfDel
+      , handleDeleteConfCancel, handleShowDeleteConf, name
+       } = this.props;
 
     const nameCreate = {
       id: -1,
@@ -137,6 +146,7 @@ class NamesContainer extends Component {
             onSubmitForm={handleSubmitForm}
             label={modeForm} 
             onCancelEdit={handleCancelEdit}
+            isLoadingUpdate={isLoadingUpdate}
           /> 
 
           <SearchComponent onSubmitSearch={handleSubmitSearch} 
@@ -145,7 +155,7 @@ class NamesContainer extends Component {
           <TableComponent isLoading={isLoading} 
                           items={names} 
                           onEdit={handleEdit}
-                          onDelete={handleDelete}
+                          onDelete={handleShowDeleteConf}
                           actPag={actPag}
                           totalPags={totalPags}
                           onChangePag={handleChangePag}
@@ -153,7 +163,22 @@ class NamesContainer extends Component {
                           onNext={handleNextPag}
                           order={order}
                           onChangeOrd={handleChangeOrd}
+                          isLoadingUpdate={isLoadingUpdate}
+                          modeForm={modeForm}
                           />
+          
+          <Modal show={showConfDel} onHide={handleDeleteConfCancel}>
+            <Modal.Header closeButton>
+              <Modal.Title>Delete? </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <h4>Are you sure to delete {name && name.name}?</h4>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={handleDeleteConfCancel}>Close</Button>
+              <Button bsStyle="danger" onClick={() => handleDelete(name)}>Delete</Button>
+            </Modal.Footer>
+          </Modal>
         </Panel.Body>
       </Panel>
     );
@@ -187,7 +212,8 @@ const mapStateToProps = ({ names }) => ({
    totalPags: names.totalPags,
    actPag: names.actPag,
    actSearch: names.actSearch,
-   order: names.order
+   order: names.order,
+   showConfDel: names.showConfDel
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -198,7 +224,9 @@ const mapDispatchToProps = (dispatch) => ({
   setSearch: (search) => dispatch(setNameSearchAction(search)),
   setNameText: (nameText) => dispatch(setNameTextAction(nameText)),
   setModeForm: (modeForm, name = null) => dispatch(setNameModeFormAction(modeForm, name)),
-  setOrder: (field) => dispatch(setNameOrderAction(field))
+  setOrder: (field) => dispatch(setNameOrderAction(field)),
+  showDeleteConf: (name) => dispatch(showNameDeleteConfAction(name)),
+  cancelDeleteConf: () => dispatch(cancelNameDeleteConfAction())
 });
 
 export default connect(mapStateToProps, 

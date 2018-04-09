@@ -3,7 +3,8 @@ import { FormGroup, ControlLabel, FormControl
   ,Button, InputGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const InputComponent = ({ name, label, onSubmitForm, onChangeForm, onCancelEdit }) => (
+const InputComponent = ({ name, label, onSubmitForm
+  , onChangeForm, onCancelEdit, isLoadingUpdate }) => (
   <form onSubmit={onSubmitForm}>
     <FormGroup>
       <ControlLabel>Name</ControlLabel>
@@ -11,7 +12,7 @@ const InputComponent = ({ name, label, onSubmitForm, onChangeForm, onCancelEdit 
         <FormControl type="text" placeholder="Write a name..." 
           onChange={onChangeForm} value={name}/>
         <InputGroup.Button>
-          <Button type="submit">{label}</Button>
+          <Button type="submit" disabled={name.length===0 || isLoadingUpdate}>{label}</Button>
           {label === 'Edit' &&
             <Button onClick={onCancelEdit}>Cancelar</Button>
           }

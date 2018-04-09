@@ -24,6 +24,8 @@ const SET_NAME_TEXT = 'app/names/SET_NAME_TEXT';
 const SET_NAME_ENTITY = 'app/names/SET_NAME_ENTITY';
 const SET_NAME_MODE_FORM = 'app/names/SET_NAME_MODE_FORM';
 const SET_NAME_ORDER = 'app/names/SET_NAME_ORDER';
+const SHOW_NAME_DELETE_CONF = 'app/names/SHOW_NAME_DELETE_CONF';
+const CANCEL_NAME_DELETE_CONF = 'app/names/CANCEL_NAME_DELETE_CONF';
 
 // function createName() {
 //   return {
@@ -47,12 +49,13 @@ const InitialState = {
   nameText: '',
   _nameText: '',
   name: null,
-  modeForm: 'Create',
+  modeForm: 'Create', //Create,Edit,Delete
   totalPags: 1,
   actPag: 1,
   _actPag: 1,
   order: null, 
-  _order: null
+  _order: null,
+  showConfDel: false
 };
 
 function swapName(names, testfunc, name) {
@@ -117,12 +120,14 @@ export default function reducer(state = InitialState, action = {}) {
 
     case DELETE_NAME_REQ: return {...state, 
                           names: reject(state.names, (n) => n.id === action.tempName.id),
+                          showConfDel: false,
                           isLoadingUpdate: true};
     case DELETE_NAME_OK:  return {...state, 
                           isLoadingUpdate: false};
     case DELETE_NAME_ERROR: return {...state, 
                             error: action.error, 
                             names: [action.tempName, ...state.names],
+                            showConfDel: true,
                             isLoadingUpdate: false};
 
     case EDIT_NAME_REQ: return {...state, 
@@ -188,6 +193,18 @@ export default function reducer(state = InitialState, action = {}) {
                         ...state,
                         order
                       };
+    case SHOW_NAME_DELETE_CONF:
+                      return {
+                        ...state,
+                        showConfDel: true,
+                        name: action.name
+                      };
+    case CANCEL_NAME_DELETE_CONF:
+                      return {
+                        ...state,
+                        showConfDel: false,
+                        name: null
+                      };
     default: return state;
   }
 }
@@ -250,6 +267,19 @@ export function setNameOrderAction(field) {
   return {
     type: SET_NAME_ORDER,
     field
+  };
+}
+
+export function showNameDeleteConfAction(name) {
+  return {
+    type: SHOW_NAME_DELETE_CONF,
+    name
+  };
+}
+
+export function cancelNameDeleteConfAction() {
+  return {
+    type: CANCEL_NAME_DELETE_CONF
   };
 }
 
