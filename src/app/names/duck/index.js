@@ -26,6 +26,7 @@ const SET_NAME_MODE_FORM = 'app/names/SET_NAME_MODE_FORM';
 const SET_NAME_ORDER = 'app/names/SET_NAME_ORDER';
 const SHOW_NAME_DELETE_CONF = 'app/names/SHOW_NAME_DELETE_CONF';
 const CANCEL_NAME_DELETE_CONF = 'app/names/CANCEL_NAME_DELETE_CONF';
+const OK_NAME_ERROR = 'app/names/OK_NAME_ERROR';
 
 // function createName() {
 //   return {
@@ -145,7 +146,8 @@ export default function reducer(state = InitialState, action = {}) {
                         name: null,
                         _nameText: '',
                         isLoadingUpdate: false};
-    case EDIT_NAME_ERROR: return {...state, 
+    case EDIT_NAME_ERROR: return {...state,
+                          error: action.error,  
                           names: swapName(state.names,
                             (n) => n.id === action.tempName.id,
                             action.name),
@@ -205,6 +207,11 @@ export default function reducer(state = InitialState, action = {}) {
                         showConfDel: false,
                         name: null
                       };
+    case OK_NAME_ERROR:
+                      return {
+                        ...state,
+                        error: ''
+                      };
     default: return state;
   }
 }
@@ -233,7 +240,6 @@ export function deleteNameAction(name) {
 }
 
 export function editNameAction(name, tempName) {
-  console.log(tempName);
   return {
     type: EDIT_NAME_REQ,
     tempName,
@@ -280,6 +286,12 @@ export function showNameDeleteConfAction(name) {
 export function cancelNameDeleteConfAction() {
   return {
     type: CANCEL_NAME_DELETE_CONF
+  };
+}
+
+export function okNameErrorAction() {
+  return {
+    type: OK_NAME_ERROR
   };
 }
 

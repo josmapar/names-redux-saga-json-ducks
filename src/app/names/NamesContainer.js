@@ -4,13 +4,15 @@ import { connect } from 'react-redux';
 import { getNamesAction, createNameAction, deleteNameAction
       , editNameAction, setNameSearchAction, setNameTextAction
       , setNameModeFormAction, setNameOrderAction
-      , showNameDeleteConfAction, cancelNameDeleteConfAction } from './duck/index';
+      , showNameDeleteConfAction, cancelNameDeleteConfAction
+      , okNameErrorAction } from './duck/index';
 import CounterComponent from './CounterComponent';
 import InputComponent from './InputComponent';
 import SearchComponent from './SearchComponent';
 import TableComponent from './TableComponent';
 import LoadingComponent from './LoadingComponent';
-import { Panel, Button, Modal } from 'react-bootstrap';
+import { Panel, Button, Modal
+  , Glyphicon } from 'react-bootstrap';
 import { compose, withHandlers, lifecycle
    } from 'recompose';
 //import './styles.css';
@@ -82,6 +84,9 @@ const enhance = compose(
     handleChangeOrd: ({ setOrder, getNames, order, actSearch, actPag }) => (field) => {
       //setOrder(field);
       getNames({q: actSearch, _page: actPag, oldOrder: order, field});
+    },
+    handleOkError: ({ okNameError }) => () => {
+      okNameError();
     }
   }),
   lifecycle({
@@ -104,6 +109,7 @@ class NamesContainer extends Component {
       , handleNextPag, order, handleChangeOrd 
       , handleCancelEdit, showConfDel
       , handleDeleteConfCancel, handleShowDeleteConf, name
+      , handleOkError, error
        } = this.props;
 
     const nameCreate = {
@@ -179,6 +185,18 @@ class NamesContainer extends Component {
               <Button bsStyle="danger" onClick={() => handleDelete(name)}>Delete</Button>
             </Modal.Footer>
           </Modal>
+
+          <Modal show={error !== ''} onHide={handleOkError}>
+            <Modal.Header closeButton>
+              <Modal.Title><Glyphicon glyph="remove-sign" style={{color: 'red'}} /> Ooops Error!</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>{error}</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button bsStyle="primary" onClick={handleOkError}>OK</Button>
+            </Modal.Footer>
+          </Modal>
         </Panel.Body>
       </Panel>
     );
@@ -226,7 +244,8 @@ const mapDispatchToProps = (dispatch) => ({
   setModeForm: (modeForm, name = null) => dispatch(setNameModeFormAction(modeForm, name)),
   setOrder: (field) => dispatch(setNameOrderAction(field)),
   showDeleteConf: (name) => dispatch(showNameDeleteConfAction(name)),
-  cancelDeleteConf: () => dispatch(cancelNameDeleteConfAction())
+  cancelDeleteConf: () => dispatch(cancelNameDeleteConfAction()),
+  okNameError: () => dispatch(okNameErrorAction())
 });
 
 export default connect(mapStateToProps, 
