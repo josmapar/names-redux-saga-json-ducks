@@ -19,7 +19,7 @@ const InputComponent = ({ name, label, onSubmitForm
             {label}
           </Button>
           {label === 'Edit' &&
-            <Button onClick={onCancelEdit}>Cancel</Button>
+            <Button style={{marginLeft: '2px', borderRadius: '5px', marginTop: '7px'}}  onClick={onCancelEdit}>Cancel</Button>
           }
         </InputGroup.Button>
       </InputGroup>

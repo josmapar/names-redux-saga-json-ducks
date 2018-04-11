@@ -106,41 +106,41 @@ class NamesContainer extends Component {
       , handleOkError, error
        } = this.props;
 
-    const nameCreate = {
-      id: -1,
-      name: 'Jose Perez',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    const nameEdit = {
-      id: 21,
-      name: 'Jose Manuel Perez',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    const nameEdit2 = {
-      id: 21,
-      name: 'Jose Perez',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    const query = {q: 'Jo'};
-    const sort_asc = {_sort: 'name', _order: 'asc'};
-    const sort_desc = {_sort: 'name', _order: 'desc'};
-    const q_sort_asc = {...query, ...sort_asc};
+    // const nameCreate = {
+    //   id: -1,
+    //   name: 'Jose Perez',
+    //   createdAt: new Date().toISOString(),
+    //   updatedAt: new Date().toISOString(),
+    // };
+    // const nameEdit = {
+    //   id: 21,
+    //   name: 'Jose Manuel Perez',
+    //   createdAt: new Date().toISOString(),
+    //   updatedAt: new Date().toISOString(),
+    // };
+    // const nameEdit2 = {
+    //   id: 21,
+    //   name: 'Jose Perez',
+    //   createdAt: new Date().toISOString(),
+    //   updatedAt: new Date().toISOString(),
+    // };
+    // const query = {q: 'Jo'};
+    // const sort_asc = {_sort: 'name', _order: 'asc'};
+    // const sort_desc = {_sort: 'name', _order: 'desc'};
+    // const q_sort_asc = {...query, ...sort_asc};
     return (
       <Panel bsStyle="primary">
         <Panel.Heading>
           <Panel.Title componentClass="h1">Names</Panel.Title>
         </Panel.Heading>
         <Panel.Body>
-          <Button onClick={() => createName(nameCreate)}>Create</Button>
+          {/* <Button onClick={() => createName(nameCreate)}>Create</Button>
           <Button onClick={() => deleteName(nameEdit)}>Delete</Button>
           <Button onClick={() => editName(nameEdit, nameEdit2)}>Edit</Button>
           <Button onClick={() => getNames(query)}>Search</Button>
           <Button onClick={() => getNames(sort_asc)}>Order ASC</Button>
           <Button onClick={() => getNames(sort_desc)}>Order DESC</Button>
-          <Button onClick={() => getNames(q_sort_asc)}>Search {'&'} Order ASC</Button>
+          <Button onClick={() => getNames(q_sort_asc)}>Search {'&'} Order ASC</Button> */}
           <InputComponent name={nameText} 
             onChangeForm={handleChangeForm} 
             onSubmitForm={handleSubmitForm}
