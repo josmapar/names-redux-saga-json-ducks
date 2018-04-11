@@ -55,7 +55,7 @@ const TableComponent = ( { items, onEdit, onDelete
         ))}         
       </tbody>
     </Table>
-    <PaginationComponent actPag={actPag} totalPags={totalPags}
+    <PaginationComponent style={{float: 'right'}} actPag={actPag} totalPags={totalPags}
       onChangePag={onChangePag} onPrev={onPrev} onNext={onNext} />
   </div>
 );

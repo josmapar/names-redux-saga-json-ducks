@@ -47,8 +47,42 @@ const enhance = compose(
   })
 );
 const PaginationComponent = ({ actPag, totalPags, numberMaxNeighbors
-  , onChangePag, onPrev, onNext }) => (
-  <Pagination>
+  , onChangePag, onPrev, onNext, style }) => (
+  <Pagination style={style}>
+     <style type="text/css">{`
+      li.pagination-link-prev > a, li.pagination-link-prev > span {
+        margin-right: 20px;
+        border-radius: 15px;
+        width: 10em;
+        text-align: center;
+      }
+
+      li.pagination-link-next > a, li.pagination-link-next > span {
+        margin-left: 20px;
+        border-radius: 15px !important;
+        width: 140px;
+        text-align: center;   
+      }
+
+      @media (max-width: 600px) {
+        li.pagination-link-next > a, li.pagination-link-next > span {
+          margin-left: 0;
+        }
+      }
+
+      li.pagination-link > a, li.pagination-link > span {
+        border-radius: 15px;
+        padding: 0 15px;
+        margin: 5px 5px;
+        font-weight: bold;
+        color: black;
+      }
+
+      .pagination>.active>span, .pagination>.active>span:hover {
+        background: gray;
+        font-weight: bold;
+      }
+    `}</style>
     <Pagination.Prev onClick={onPrev} className="pagination-link-prev" 
       disabled={actPag===1}>{'←'} Previous</Pagination.Prev>
     

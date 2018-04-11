@@ -1,18 +1,23 @@
 import React from 'react';
 import { FormGroup, ControlLabel, FormControl
-  ,Button, InputGroup } from 'react-bootstrap';
+  ,Button, InputGroup, Label } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 const InputComponent = ({ name, label, onSubmitForm
   , onChangeForm, onCancelEdit, isLoadingUpdate }) => (
   <form onSubmit={onSubmitForm}>
     <FormGroup>
-      <ControlLabel>Name</ControlLabel>
+      <Label style={{padding: '4px 12px'}}>Name</Label>
       <InputGroup>  
         <FormControl type="text" placeholder="Write a name..." 
-          onChange={onChangeForm} value={name}/>
+          onChange={onChangeForm} value={name} 
+          style={{borderRadius: '5px', marginTop: '7px'}} />
         <InputGroup.Button>
-          <Button type="submit" disabled={name.length===0 || isLoadingUpdate}>{label}</Button>
+          <Button bsStyle="primary" type="submit" 
+            style={{width: '120px', marginLeft: '15px', borderRadius: '5px', marginTop: '7px'}} 
+            disabled={name.length===0 || isLoadingUpdate}>
+            {label}
+          </Button>
           {label === 'Edit' &&
             <Button onClick={onCancelEdit}>Cancel</Button>
           }

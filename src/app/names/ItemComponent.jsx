@@ -1,11 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Glyphicon } from 'react-bootstrap';
-import { compose, flattenProp } from 'recompose';
+import { compose, flattenProp, mapProps } from 'recompose';
+import moment from 'moment';
 import LoadingComponent from './LoadingComponent';
 
+function convertDate(date) {
+  return moment(date).format('MM/DD/YYYY');
+}
+
 const enhance = compose(
-  flattenProp('value')
+  flattenProp('value'),
+  mapProps(props => 
+    ({...props, 
+      createdAt: convertDate(props.createdAt),
+      updatedAt: convertDate(props.updatedAt)
+    })
+  )
 );
 
 const ItemComponent = ({
@@ -14,19 +25,19 @@ const ItemComponent = ({
   , isLoadingUpdate, modeForm 
 }) => (
   <tr>
-    <td>{name}</td>
-    <td>{createdAt}</td>
-    <td>{updatedAt}</td>
-    <td>
+    <td style={{verticalAlign: 'middle'}}>{name}</td>
+    <td style={{verticalAlign: 'middle'}}>{createdAt}</td>
+    <td style={{verticalAlign: 'middle'}}>{updatedAt}</td>
+    <td style={{verticalAlign: 'middle'}}>
       <div>
         {!isLoadingUpdate ?
           <div>
-            <a style={{cursor: 'pointer'}} onClick={() => onEdit(value)}>
+            <a style={{cursor: 'pointer', fontSize: '2em', marginRight: '10px'}} onClick={() => onEdit(value)}>
               <Glyphicon glyph="edit" />
             </a>
             {' '}
             {modeForm !== 'Edit' &&
-              <a style={{cursor: 'pointer'}} onClick={() => onDelete(value)}>
+              <a style={{cursor: 'pointer', fontSize: '2em'}} onClick={() => onDelete(value)}>
                 <Glyphicon glyph="trash" />
               </a>
             }

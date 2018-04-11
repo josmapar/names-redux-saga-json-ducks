@@ -10,7 +10,7 @@ import InputComponent from './InputComponent';
 import SearchComponent from './SearchComponent';
 import TableComponent from './TableComponent';
 import { Panel, Button, Modal
-  , Glyphicon } from 'react-bootstrap';
+  , Glyphicon, Row, Col } from 'react-bootstrap';
 import { compose, withHandlers, lifecycle
    } from 'recompose';
 //import './styles.css';
@@ -149,9 +149,16 @@ class NamesContainer extends Component {
             isLoadingUpdate={isLoadingUpdate}
           /> 
 
-          <SearchComponent onSubmitSearch={handleSubmitSearch} 
-            onChangeSearch={handleChangeSearch} search={search} />
-          <h2>Names List</h2>
+          <Row>
+            <Col md={7} mdPush={5}>
+              <SearchComponent onSubmitSearch={handleSubmitSearch} 
+                onChangeSearch={handleChangeSearch} search={search} />
+            </Col>
+            <Col md={5} mdPull={7}>
+              <h2 style={{color: '#18bf01', marginTop: '5px', textAlign: 'left', fontStyle:"italic", fontWeight: 'bold', fontSize: '22px'}}>Names List</h2>
+            </Col>
+          </Row>
+
           <TableComponent isLoading={isLoading} 
                           items={names} 
                           onEdit={handleEdit}
