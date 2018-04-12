@@ -25,19 +25,19 @@ const ItemComponent = ({
   , isLoadingUpdate, modeForm 
 }) => (
   <tr>
-    <td style={{verticalAlign: 'middle'}}>{name}</td>
-    <td style={{verticalAlign: 'middle'}}>{createdAt}</td>
-    <td style={{verticalAlign: 'middle'}}>{updatedAt}</td>
-    <td style={{verticalAlign: 'middle'}}>
+    <td>{name}</td>
+    <td>{createdAt}</td>
+    <td>{updatedAt}</td>
+    <td>
       <div>
         {!isLoadingUpdate ?
           <div>
-            <a style={{cursor: 'pointer', fontSize: '2em', marginRight: '10px'}} onClick={() => onEdit(value)}>
+            <a className="names-link-edit" onClick={() => onEdit(value)}>
               <Glyphicon glyph="edit" />
             </a>
             {' '}
             {modeForm !== 'Edit' &&
-              <a style={{cursor: 'pointer', fontSize: '2em'}} onClick={() => onDelete(value)}>
+              <a className="names-link-delete" onClick={() => onDelete(value)}>
                 <Glyphicon glyph="trash" />
               </a>
             }

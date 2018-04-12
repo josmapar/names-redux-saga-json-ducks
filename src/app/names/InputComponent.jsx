@@ -7,19 +7,17 @@ const InputComponent = ({ name, label, onSubmitForm
   , onChangeForm, onCancelEdit, isLoadingUpdate }) => (
   <form onSubmit={onSubmitForm}>
     <FormGroup>
-      <Label style={{padding: '4px 12px'}}>Name</Label>
+      <Label className="names-label-input">Name</Label>
       <InputGroup>  
         <FormControl type="text" placeholder="Write a name..." 
-          onChange={onChangeForm} value={name} 
-          style={{borderRadius: '5px', marginTop: '7px'}} />
+          onChange={onChangeForm} value={name} className="names-input" />
         <InputGroup.Button>
-          <Button bsStyle="primary" type="submit" 
-            style={{width: '120px', marginLeft: '15px', borderRadius: '5px', marginTop: '7px'}} 
+          <Button bsStyle="primary" type="submit" className="names-button-update"
             disabled={name.length===0 || isLoadingUpdate}>
             {label}
           </Button>
           {label === 'Edit' &&
-            <Button style={{marginLeft: '2px', borderRadius: '5px', marginTop: '7px'}}  onClick={onCancelEdit}>Cancel</Button>
+            <Button className="names-button-cancel" onClick={onCancelEdit}>Cancel</Button>
           }
         </InputGroup.Button>
       </InputGroup>

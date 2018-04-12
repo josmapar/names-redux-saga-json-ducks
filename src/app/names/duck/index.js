@@ -59,7 +59,6 @@ function swapName(names, testfunc, name) {
   const ind = findIndex(names, testfunc);
   const st = [...names];
   st.splice(ind, 1, name);
-  //console.log(st);
   return st;
 }
 
@@ -302,7 +301,6 @@ function* getNamesSaga({query}) {
       ...calOrder(query, {nameField: '_sort', nameType: '_order'})
     });
 
-    //console.log("names:", res);
     const totalItems = parseInt(res.headers['x-total-count'], 10);
     const limit = 10; //default
     const totalPags = parseInt(Math.ceil(totalItems/limit), 10);
@@ -310,7 +308,7 @@ function* getNamesSaga({query}) {
     yield put({type: GET_NAMES_OK, names: res.data, totalPags
       , actPag: query._page, actSearch: query.q || ''});
   } catch (error) {
-    //console.log(error);
+    
     yield put({type: GET_NAMES_ERROR, error: error.message});
   }
 }
@@ -320,7 +318,7 @@ function* createNameSaga({tempName}) {
     const res = yield call(createName, tempName);
     yield put({type: CREATE_NAME_OK, name: res.data, tempName});
   } catch(error) {
-    //console.log(error);
+
     yield put({type: CREATE_NAME_ERROR, error: error.message
       ,tempName });
   }
@@ -331,7 +329,7 @@ function* deleteNameSaga({tempName}) {
     yield call(deleteName, tempName);
     yield put({type: DELETE_NAME_OK});
   } catch(error) {
-    //console.log(error);
+    
     yield put({type: DELETE_NAME_ERROR, error: error.message
       ,tempName});
   }
@@ -342,7 +340,7 @@ function* editNameSaga({name, tempName}) {
     const res = yield call(editName, name);
     yield put({type: EDIT_NAME_OK, name: res.data, tempName});
   } catch(error) {
-    //console.log(error);
+    
     yield put({type: EDIT_NAME_ERROR, error: error.message
       ,tempName });
   }

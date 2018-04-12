@@ -8,12 +8,11 @@ const SearchComponent = ({ onSubmitSearch, search, onChangeSearch }) => (
   <form onSubmit={onSubmitSearch}>
     <FormGroup>
       <InputGroup>  
-        <FormControl type="text" onChange={onChangeSearch} style={{borderRadius: '5px'}}
+        <FormControl type="text" onChange={onChangeSearch} className="names-search"
             placeholder="Search for a name..." value={search} />
         <InputGroup.Button>
-          <Button bsStyle="success" type="submit" 
-            style={{width: '120px', marginLeft: '15px', borderRadius: '5px'}}>
-            <Glyphicon glyph="search" style={{marginRight: '10px'}} />
+          <Button bsStyle="success" type="submit" className="names-search-btn">
+            <Glyphicon className="names-search-icon" glyph="search" />
             Search
           </Button>
         </InputGroup.Button>

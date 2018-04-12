@@ -13,7 +13,7 @@ import { Panel, Button, Modal
   , Glyphicon, Row, Col } from 'react-bootstrap';
 import { compose, withHandlers, lifecycle
    } from 'recompose';
-//import './styles.css';
+import './styles.css';
 
 const enhance = compose(
   withHandlers({
@@ -27,7 +27,6 @@ const enhance = compose(
     handleSubmitForm: ({createName, editName, nameText
       , modeForm, name}) => (e) => {
       e.preventDefault();
-      //console.log("handleSubmitForm ...");
       if(modeForm === 'Create') {
         const obj = {
           name: nameText,
@@ -106,41 +105,12 @@ class NamesContainer extends Component {
       , handleOkError, error
        } = this.props;
 
-    // const nameCreate = {
-    //   id: -1,
-    //   name: 'Jose Perez',
-    //   createdAt: new Date().toISOString(),
-    //   updatedAt: new Date().toISOString(),
-    // };
-    // const nameEdit = {
-    //   id: 21,
-    //   name: 'Jose Manuel Perez',
-    //   createdAt: new Date().toISOString(),
-    //   updatedAt: new Date().toISOString(),
-    // };
-    // const nameEdit2 = {
-    //   id: 21,
-    //   name: 'Jose Perez',
-    //   createdAt: new Date().toISOString(),
-    //   updatedAt: new Date().toISOString(),
-    // };
-    // const query = {q: 'Jo'};
-    // const sort_asc = {_sort: 'name', _order: 'asc'};
-    // const sort_desc = {_sort: 'name', _order: 'desc'};
-    // const q_sort_asc = {...query, ...sort_asc};
     return (
       <Panel bsStyle="primary">
         <Panel.Heading>
           <Panel.Title componentClass="h1">Names</Panel.Title>
         </Panel.Heading>
         <Panel.Body>
-          {/* <Button onClick={() => createName(nameCreate)}>Create</Button>
-          <Button onClick={() => deleteName(nameEdit)}>Delete</Button>
-          <Button onClick={() => editName(nameEdit, nameEdit2)}>Edit</Button>
-          <Button onClick={() => getNames(query)}>Search</Button>
-          <Button onClick={() => getNames(sort_asc)}>Order ASC</Button>
-          <Button onClick={() => getNames(sort_desc)}>Order DESC</Button>
-          <Button onClick={() => getNames(q_sort_asc)}>Search {'&'} Order ASC</Button> */}
           <InputComponent name={nameText} 
             onChangeForm={handleChangeForm} 
             onSubmitForm={handleSubmitForm}
@@ -155,7 +125,7 @@ class NamesContainer extends Component {
                 onChangeSearch={handleChangeSearch} search={search} />
             </Col>
             <Col md={5} mdPull={7}>
-              <h2 style={{color: '#18bf01', marginTop: '5px', textAlign: 'left', fontStyle:"italic", fontWeight: 'bold', fontSize: '22px'}}>Names List</h2>
+              <h2 className="names-title">Names List</h2>
             </Col>
           </Row>
 
@@ -189,7 +159,7 @@ class NamesContainer extends Component {
 
           <Modal show={error !== ''} onHide={handleOkError}>
             <Modal.Header closeButton>
-              <Modal.Title><Glyphicon glyph="remove-sign" style={{color: 'red'}} /> Ooops Error!</Modal.Title>
+              <Modal.Title><Glyphicon className="glyph-error" glyph="remove-sign" /> Ooops Error!</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <p>{error}</p>
