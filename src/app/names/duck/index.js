@@ -312,9 +312,6 @@ function* getNamesSaga({query}) {
     });
 
     const totalPags = calcTotal(res);
-    // const totalItems = parseInt(res.headers['x-total-count'], 10);
-    // const limit = 10; //default
-    // const totalPags = parseInt(Math.ceil(totalItems/limit), 10);
 
     yield [put({type: GET_NAMES_OK, names: res.data, totalPags
       , actPag: query._page, actSearch: query.q || ''}),
