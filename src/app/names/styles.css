@@ -1,0 +1,96 @@
+.names-title {
+  color: #18bf01;
+  margin-top: 5px; 
+  text-align: left; 
+  font-style: italic; 
+  font-weight: bold; 
+  font-size: 22px;
+}
+
+.glyph-error {
+  color: red;
+}
+
+.names-label-input {
+  padding: 4px 12px;
+}
+
+input.names-input {
+  border-radius: 5px !important; 
+  margin-top: 7px;
+}
+
+button.names-button-update {
+  width: 120px; 
+  margin-left: 15px !important; 
+  border-radius: 5px !important; 
+  margin-top: 7px;
+}
+
+button.names-button-cancel {
+  margin-left: 2px !important; 
+  border-radius: 5px !important; 
+  margin-top: 7px;
+}
+
+td {
+  vertical-align: middle !important;
+}
+
+a.names-link-edit {
+  cursor: pointer; 
+  font-size: 2em; 
+  margin-right: 10px;
+}
+
+a.names-link-delete {
+  cursor: pointer; 
+  font-size: 2em;
+}
+
+input.names-search {
+  border-radius: 5px !important;
+}
+
+button.names-search-btn {
+  width: 120px; 
+  margin-left: 15px !important; 
+  border-radius: 5px !important;
+}
+
+.names-search-icon {
+  margin-right: 10px;
+}
+
+li.pagination-link-prev > a, li.pagination-link-prev > span {
+  margin-right: 20px;
+  border-radius: 15px;
+  width: 10em;
+  text-align: center;
+}
+
+li.pagination-link-next > a, li.pagination-link-next > span {
+  margin-left: 20px;
+  border-radius: 15px !important;
+  width: 140px;
+  text-align: center;   
+}
+
+@media (max-width: 600px) {
+  li.pagination-link-next > a, li.pagination-link-next > span {
+    margin-left: 0;
+  }
+}
+
+li.pagination-link > a, li.pagination-link > span {
+  border-radius: 15px;
+  padding: 0 15px;
+  margin: 5px 5px;
+  font-weight: bold;
+  color: black;
+}
+
+.pagination>.active>span, .pagination>.active>span:hover {
+  background: gray;
+  font-weight: bold;
+}
