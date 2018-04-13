@@ -55,6 +55,7 @@ const InitialState = {
   showConfDel: false
 };
 
+//utils
 function swapName(names, testfunc, name) {
   const ind = findIndex(names, testfunc);
   const st = [...names];
@@ -64,7 +65,7 @@ function swapName(names, testfunc, name) {
 
 function calOrder(query, opts = {nameField: 'field', nameType: 'type'}) {
   const { nameField, nameType } = opts;
-  let res = null;
+  let res = {[nameField]: 'name', [nameType]: 'asc'};
   if(typeof(query.order) !== 'undefined' && query.order !== null) {
     res = {
       [nameField]: query.order.field,
@@ -88,6 +89,13 @@ function calOrder(query, opts = {nameField: 'field', nameType: 'type'}) {
   return res;
 }
 
+function calcTotal(res) {
+  const totalItems = parseInt(res.headers['x-total-count'], 10);
+  const limit = 10; //default
+  const totalPags = parseInt(Math.ceil(totalItems/limit), 10);
+  return totalPags;
+}
+
 //Reducer
 export default function reducer(state = InitialState, action = {}) {
   switch(action.type) {
@@ -105,6 +113,7 @@ export default function reducer(state = InitialState, action = {}) {
                             (n) => n === action.tempName, 
                             action.name),
                           _nameText: '',
+                          totalPags: action.totalPags,
                           isLoadingUpdate: false};
     case CREATE_NAME_ERROR: return {...state, 
                           error: action.error, 
@@ -118,6 +127,7 @@ export default function reducer(state = InitialState, action = {}) {
                           showConfDel: false,
                           isLoadingUpdate: true};
     case DELETE_NAME_OK:  return {...state, 
+                          totalPags: action.totalPags,
                           isLoadingUpdate: false};
     case DELETE_NAME_ERROR: return {...state, 
                             error: action.error, 
@@ -301,12 +311,14 @@ function* getNamesSaga({query}) {
       ...calOrder(query, {nameField: '_sort', nameType: '_order'})
     });
 
-    const totalItems = parseInt(res.headers['x-total-count'], 10);
-    const limit = 10; //default
-    const totalPags = parseInt(Math.ceil(totalItems/limit), 10);
+    const totalPags = calcTotal(res);
+    // const totalItems = parseInt(res.headers['x-total-count'], 10);
+    // const limit = 10; //default
+    // const totalPags = parseInt(Math.ceil(totalItems/limit), 10);
 
-    yield put({type: GET_NAMES_OK, names: res.data, totalPags
-      , actPag: query._page, actSearch: query.q || ''});
+    yield [put({type: GET_NAMES_OK, names: res.data, totalPags
+      , actPag: query._page, actSearch: query.q || ''}),
+          put];
   } catch (error) {
     
     yield put({type: GET_NAMES_ERROR, error: error.message});
@@ -316,7 +328,9 @@ function* getNamesSaga({query}) {
 function* createNameSaga({tempName}) {
   try{
     const res = yield call(createName, tempName);
-    yield put({type: CREATE_NAME_OK, name: res.data, tempName});
+    const pag = yield call(getNames, {_page:1, _limit:1});
+
+    yield put({type: CREATE_NAME_OK, name: res.data, tempName, totalPags: calcTotal(pag)});
   } catch(error) {
 
     yield put({type: CREATE_NAME_ERROR, error: error.message
@@ -327,17 +341,20 @@ function* createNameSaga({tempName}) {
 function* deleteNameSaga({tempName}) {
   try{
     yield call(deleteName, tempName);
-    yield put({type: DELETE_NAME_OK});
+    const pag = yield call(getNames, {_page:1, _limit:1});
+
+    yield put({type: DELETE_NAME_OK, totalPags: calcTotal(pag)});
   } catch(error) {
     
     yield put({type: DELETE_NAME_ERROR, error: error.message
-      ,tempName});
+      ,tempName });
   }
 }
 
 function* editNameSaga({name, tempName}) {
   try{
     const res = yield call(editName, name);
+
     yield put({type: EDIT_NAME_OK, name: res.data, tempName});
   } catch(error) {
     

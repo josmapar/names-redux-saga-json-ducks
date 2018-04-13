@@ -43,7 +43,7 @@ const ItemComponent = ({
             }
           </div>
         :
-          <LoadingComponent className='' styleImg={{width: '25px'}} />
+          <div><LoadingComponent className='' styleImg={{width: '35px'}} /></div>
         }
       </div>
     </td>

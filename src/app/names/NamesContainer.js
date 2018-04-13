@@ -93,8 +93,7 @@ const enhance = compose(
 class NamesContainer extends Component {
   render() {
     const { names, isLoading, isLoadingUpdate
-      , createName, deleteName, editName
-      , getNames, handleSubmitSearch, search 
+      , handleSubmitSearch, search 
       , handleChangeSearch, handleSubmitForm
       , handleChangeForm, nameText, modeForm 
       , handleEdit, handleDelete, totalPags
